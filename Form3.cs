@@ -16,21 +16,32 @@ namespace WinFormsApp1
         {
             InitializeComponent();
         }
+        
         private async void OnLoad(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
+
             var result = await custom.API("andyxie.cn");
-            
-                if(result.players.list != null)
+            if (result.players.list != null)
             {
                 foreach (var players in result.players.list)
                 {
                     listBox1.Items.Add(players.name);
                 }
             }
-                
 
-            
-            
+
+            ip.Text += result.ip;
+            port.Text += result.port;
+            foreach (var motds in result.motd.clean)
+            {
+                motd.Text += motds;
+
+
+            }
+            version.Text += result.version;
+
+
 
 
             string icon = result.icon;
@@ -44,7 +55,7 @@ namespace WinFormsApp1
 
                 Image icon_img_real = Image.FromStream(ms);
                 var img = icon_img_real;
-                var newImage = new Bitmap(145, 145);
+                var newImage = new Bitmap(151, 151);
 
                 using (var gr = Graphics.FromImage(newImage))
                 {
@@ -60,6 +71,23 @@ namespace WinFormsApp1
         private void copy(object sender, EventArgs e)
         {
             Clipboard.SetText(listBox1.SelectedItem.ToString());
+        }
+
+        private async void refresh_click_action(object sender, EventArgs e)
+        {
+            GC.Collect();
+            listBox1.Items.Clear();
+            var result = await custom.API("andyxie.cn");
+            if (result.players.list != null)
+            {
+                foreach (var players in result.players.list)
+                {
+                    listBox1.Items.Add(players.name);
+                }
+                
+            }
+
+            
         }
     }
 }
