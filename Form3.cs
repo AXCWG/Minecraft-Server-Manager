@@ -1,9 +1,11 @@
-﻿using System;
+﻿using RconSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,16 +14,22 @@ namespace WinFormsApp1
 {
     public partial class Form3 : Form
     {
-        public Form3()
+        string request_url;
+        public Form3(string requested_url)
         {
+            this.request_url = requested_url;
             InitializeComponent();
         }
-        
-        private async void OnLoad(object sender, EventArgs e)
+        private async void Backgroundworker_work(object sender, DoWorkEventArgs e)
+        {
+            var result = await custom.API(request_url);
+            e.Result = result;
+        }
+        private void Backgroundworker_done(object sender, RunWorkerCompletedEventArgs e)
         {
             listBox1.Items.Clear();
 
-            var result = await custom.API("andyxie.cn");
+            var result = e.Result as Rootobject;
             if (result.players.list != null)
             {
                 foreach (var players in result.players.list)
@@ -66,28 +74,64 @@ namespace WinFormsApp1
                 pictureBox1.Image = newImage;
 
             }
+            textBox1.Text += "Completed.";
+        }
+        private async void OnLoad(object sender, EventArgs e)
+        {
+           
+            BackgroundWorker backgroundWorker    = new BackgroundWorker();
+            backgroundWorker.DoWork += Backgroundworker_work;
+            backgroundWorker.RunWorkerCompleted += Backgroundworker_done;
+            backgroundWorker.RunWorkerAsync();
+            
+           
         }
 
         private void copy(object sender, EventArgs e)
         {
-            Clipboard.SetText(listBox1.SelectedItem.ToString());
+            try
+            {
+                Clipboard.SetText(listBox1.SelectedItem.ToString());
+
+            }
+            catch(NullReferenceException ex)
+            {
+                
+            }
+            finally
+            {
+
+            }
         }
 
         private async void refresh_click_action(object sender, EventArgs e)
         {
             GC.Collect();
-            listBox1.Items.Clear();
-            var result = await custom.API("andyxie.cn");
-            if (result.players.list != null)
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += Backgroundworker_work;
+            backgroundWorker.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
             {
-                foreach (var players in result.players.list)
+                listBox1.Items.Clear();
+                var result = e.Result as Rootobject;
+
+                if (result.players.list != null)
                 {
-                    listBox1.Items.Add(players.name);
+                    foreach (var players in result.players.list)
+                    {
+                        listBox1.Items.Add(players.name);
+                    }
+
                 }
-                
-            }
+            };
+            
 
             
+        }
+        private async void connect(object sender, EventArgs e)
+        {
+            
+
+
         }
     }
 }

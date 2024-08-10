@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Runtime.InteropServices;
+using RconSharp;
+using System.Security.Authentication;
 
 namespace WinFormsApp1;
 
@@ -126,4 +128,8 @@ public class custom
 
 
     }
+}
+public class Rcons
+{
+    
 }

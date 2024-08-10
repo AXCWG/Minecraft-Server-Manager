@@ -25,9 +25,11 @@ public partial class Form1 : Form
         System.Environment.Exit(0);
     }
 
-    private async void form1_onload(object sender, EventArgs e)
+    private void form1_onload(object sender, EventArgs e)
     {
-        Form3 form3 = new Form3();
+        string temp_datasource = "andyxie.cn";
+        tabPage1.Text = temp_datasource;
+        Form3 form3 = new Form3(temp_datasource);
         form3.FormBorderStyle = FormBorderStyle.None;
         form3.TopLevel = false;
         this.panel1.Controls.Add(form3);

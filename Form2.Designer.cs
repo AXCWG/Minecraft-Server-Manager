@@ -50,7 +50,7 @@
             label1.Name = "label1";
             label1.Size = new Size(397, 62);
             label1.TabIndex = 1;
-            label1.Text = "基于WinForm\r\n\r\nCopyright AXCWG 2024\r\n";
+            label1.Text = "基于WinForm\r\n\r\nFor  testing purposes only. \r\nCopyright AXCWG 2024\r\n";
             label1.TextAlign = ContentAlignment.MiddleCenter;
             label1.Click += label1_Click;
             // 

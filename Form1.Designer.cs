@@ -142,7 +142,7 @@ partial class Form1
         tabPage1.Padding = new Padding(3);
         tabPage1.Size = new Size(792, 419);
         tabPage1.TabIndex = 0;
-        tabPage1.Text = "andyxie.cn";
+        tabPage1.Text = "[1]";
         tabPage1.UseVisualStyleBackColor = true;
         // 
         // panel1
@@ -165,7 +165,7 @@ partial class Form1
         MainMenuStrip = menuStrip1;
         MaximizeBox = false;
         Name = "Form1";
-        Text = "Minecraft Server Management System";
+        Text = "Minecraft Server Manager";
         Load += form1_onload;
         menuStrip1.ResumeLayout(false);
         menuStrip1.PerformLayout();
