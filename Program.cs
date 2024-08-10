@@ -137,7 +137,12 @@ public static class Program
         //    }
         //};
 
+        if (!File.Exists("json.json"))
+        {
+            string fallbackstring = "{\"Instance\":[{\"id\": 0,\"Host\": \"andyxie.cn\" }]}";
+            File.WriteAllText("json.json", fallbackstring);
 
+        }
         var json = File.ReadAllText("json.json");
         config = JsonConvert.DeserializeObject<Config>(json);
 

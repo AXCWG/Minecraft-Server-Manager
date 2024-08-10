@@ -73,13 +73,12 @@ namespace WinFormsApp1
 
                 pictureBox1.Image = newImage;
 
+
             }
-            textBox1.Text += "Completed." + "\r\n";
+            textBox1.AppendText( "Completed." + "\r\n");
         }
         private async void OnLoad(object sender, EventArgs e)
         {
-            textBox1.SelectionStart = textBox1.Text.Length;
-            textBox1.ScrollToCaret();
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += Backgroundworker_work;
             backgroundWorker.RunWorkerCompleted += Backgroundworker_done;
@@ -157,7 +156,7 @@ namespace WinFormsApp1
                     button.Enabled = false;
                 }
                 rcons = await Rcons.InitRcon(textBox3.Text, textBox4.Text, maskedTextBox1.Text);
-                textBox1.Text += "Connection successful. \r\n";
+                textBox1.AppendText( "Connection successful. \r\n");
                 
                 button2.Text = "Disconnect";
                 button2.Enabled = true;
@@ -167,7 +166,7 @@ namespace WinFormsApp1
             catch (Exception ex)
             {
 
-                textBox1.Text += ex.Message + "\r\n";
+                textBox1.AppendText( ex.Message + "\r\n");
 
             }
 
@@ -201,20 +200,20 @@ namespace WinFormsApp1
             try
             {
                 string output = await Rcons.io(textBox2.Text) + "\r\n";
-            textBox1.Text += output;
+            textBox1.AppendText(output);
         }catch(NullReferenceException ex)
             {
-                textBox1.Text += ex.Message + "\r\n";
+                textBox1.AppendText(ex.Message + "\r\n");
             }
 }
         private async void send_command()
         {
             try {
                 string output = await Rcons.io(textBox2.Text) + "\r\n";
-                textBox1.Text += output;
+                textBox1.AppendText(output);
             }catch(NullReferenceException ex)
             {
-                textBox1.Text += "Please connect to the host first. \r\n";
+                textBox1.AppendText("Please connect to the host first. \r\n");
             }
 
             
