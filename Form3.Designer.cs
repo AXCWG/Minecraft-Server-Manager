@@ -296,7 +296,7 @@
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(216, 23);
             textBox3.TabIndex = 0;
-            textBox3.Text = "127.0.0.1";
+            textBox3.Text = "192.168.1.166";
             // 
             // textBox4
             // 
@@ -305,7 +305,7 @@
             textBox4.Name = "textBox4";
             textBox4.Size = new Size(102, 23);
             textBox4.TabIndex = 3;
-            textBox4.Text = "25567";
+            textBox4.Text = "25575";
             // 
             // button2
             // 
@@ -322,10 +322,11 @@
             // 
             maskedTextBox1.Dock = DockStyle.Fill;
             maskedTextBox1.Location = new Point(333, 3);
-            maskedTextBox1.Mask = "*";
             maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.PasswordChar = '*';
             maskedTextBox1.Size = new Size(106, 23);
             maskedTextBox1.TabIndex = 4;
+            maskedTextBox1.Text = "moyingren2015";
             // 
             // textBox1
             // 
@@ -376,6 +377,7 @@
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(437, 23);
             textBox2.TabIndex = 0;
+            textBox2.KeyPress += CheckEnterKeyPress;
             // 
             // button1
             // 
@@ -386,6 +388,7 @@
             button1.TabIndex = 1;
             button1.Text = "Send";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += send_command;
             // 
             // Form3
             // 

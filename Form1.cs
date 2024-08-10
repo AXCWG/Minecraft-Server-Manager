@@ -1,4 +1,8 @@
+using Newtonsoft.Json;
+
 namespace WinFormsApp1;
+
+
 
 public partial class Form1 : Form
 {
@@ -27,16 +31,28 @@ public partial class Form1 : Form
 
     private void form1_onload(object sender, EventArgs e)
     {
-        string temp_datasource = "andyxie.cn";
-        tabPage1.Text = temp_datasource;
-        Form3 form3 = new Form3(temp_datasource);
-        form3.FormBorderStyle = FormBorderStyle.None;
-        form3.TopLevel = false;
-        this.panel1.Controls.Add(form3);
-        form3.Width = panel1.Width;
-        form3.Height = panel1.Height;
-        form3.Show();
-
+        foreach(Instance instance in Program.config.Instance)
+        {
+            string host = instance.Host;
+            TabPage tab = new TabPage();
+            Panel panel = new Panel();
+            
+            tab.Controls.Add(panel);
+            
+            panel.Dock = DockStyle.Fill;
+          
+            panel.AutoSize = false;
+            Form3 form3_ = new Form3(instance.Host);
+            form3_.FormBorderStyle = FormBorderStyle.None;
+            form3_.TopLevel = false;
+            panel.Controls.Add(form3_); 
+           form3_.Dock = DockStyle.Fill;
+            form3_.Show();
+            tab.Text = host;
+            tabControl1.TabPages.Add(tab);
+        }
+        
+        
     }
     private void copy_name(object sender, EventArgs e)
     {

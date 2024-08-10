@@ -2,9 +2,23 @@ using System.Text.Json;
 using System.Runtime.InteropServices;
 using RconSharp;
 using System.Security.Authentication;
+using Newtonsoft.Json;
+using System.Collections;
+using System.Numerics;
 
 namespace WinFormsApp1;
+public class Config 
+{
+    public  List<Instance> Instance { get; set; }
+    
+}
+public class Instance
+{
+    public BigInteger id {  get; set; }
+    public  string Host { get; set; }
 
+    
+}
 public class Rootobject
 {
     public bool online { get; set; }
@@ -96,24 +110,60 @@ public class Mod
 
 public static class Program
 {
+    public static Config config;
+
     /// <summary>
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static  void Main()
+    static void Main()
     {
-        
+
+        // Took me a million years to figure out how to initialize a class like this; 
+        //var config = new Config
+        //{
+        //    Instance = new Instance[]
+        //    {
+        //        new Instance
+        //        {
+        //            id = 0,
+        //            Host = "localhost",
+        //        },
+        //        new Instance
+        //        {
+        //            id = 1, 
+        //            Host = "localhost",
+        //        }
+        //    }
+        //};
+
+
+        var json = File.ReadAllText("json.json");
+        config = JsonConvert.DeserializeObject<Config>(json);
+
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
         Application.Run(new Form1());
-       
         
+
+
     }
-    
+    public static void Save()
+    {
+        config.Instance.Add(new Instance
+        {
+            id = config.Instance.Count() + 1,
+            Host = "play.earthmc.net"
+        });
+        File.WriteAllText("json.json", JsonConvert.SerializeObject(config));
+    }
+
 }
+
 public class custom
 {
+
     public static async Task<Rootobject> API(string serveraddress)
     {
         Console.WriteLine("Start of API");
@@ -121,7 +171,8 @@ public class custom
         client.BaseAddress = new Uri("https://api.mcsrvstat.us/3/");
         client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         HttpResponseMessage response = client.GetAsync(serveraddress).Result;
-        Rootobject rootobject = await JsonSerializer.DeserializeAsync<Rootobject>(await response.Content.ReadAsStreamAsync());
+        Rootobject rootobject = await System.Text.Json.JsonSerializer.DeserializeAsync<Rootobject>(await response.Content.ReadAsStreamAsync());
+        
         Console.WriteLine("End of API");
         return rootobject;
 
@@ -131,5 +182,33 @@ public class custom
 }
 public class Rcons
 {
+    static RconClient client2;
+    public async static Task<Rcons> InitRcon(string host, string port, string password)
+    {
+        var client = new Rcons(RconClient.Create(host, Int32.Parse(port.Trim())));
+        await client2.ConnectAsync();
+        var authenticated = await client2.AuthenticateAsync(password);
+        if (authenticated)
+        {
+            return client;
+        }
+        else
+        {
+            throw new AuthenticationException("Authentication error. ");
+
+        }
+
+    }
+    private Rcons(RconClient rconClient)
+    {
+        client2 = rconClient;
+    }
+    public async static Task<string> io(string input)
+    {
+        
+            return await client2.ExecuteCommandAsync(input, false);
+
+       
+    }
     
 }

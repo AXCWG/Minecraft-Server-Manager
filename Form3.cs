@@ -74,17 +74,28 @@ namespace WinFormsApp1
                 pictureBox1.Image = newImage;
 
             }
-            textBox1.Text += "Completed.";
+            textBox1.Text += "Completed." + "\r\n";
         }
         private async void OnLoad(object sender, EventArgs e)
         {
-           
-            BackgroundWorker backgroundWorker    = new BackgroundWorker();
+            textBox1.SelectionStart = textBox1.Text.Length;
+            textBox1.ScrollToCaret();
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += Backgroundworker_work;
             backgroundWorker.RunWorkerCompleted += Backgroundworker_done;
             backgroundWorker.RunWorkerAsync();
-            
-           
+
+
+        }
+        private void CheckEnterKeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+
+            {
+                send_command();
+                e.Handled = true;
+                textBox2.Clear();
+            }
         }
 
         private void copy(object sender, EventArgs e)
@@ -94,9 +105,9 @@ namespace WinFormsApp1
                 Clipboard.SetText(listBox1.SelectedItem.ToString());
 
             }
-            catch(NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
-                
+
             }
             finally
             {
@@ -106,7 +117,6 @@ namespace WinFormsApp1
 
         private async void refresh_click_action(object sender, EventArgs e)
         {
-            GC.Collect();
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += Backgroundworker_work;
             backgroundWorker.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
@@ -123,15 +133,91 @@ namespace WinFormsApp1
 
                 }
             };
-            
+            GC.Collect();
 
-            
+
+
         }
+        Rcons rcons;
         private async void connect(object sender, EventArgs e)
         {
             
+            try
+            {
+                foreach (TextBox textbox in tableLayoutPanel6.Controls.OfType<TextBox>())
+                {
+                    textbox.Enabled = false;
+                }
+                foreach (MaskedTextBox masked in tableLayoutPanel6.Controls.OfType<MaskedTextBox>())
+                {
+                    masked.Enabled = false;
+                }
+                foreach (Button button in tableLayoutPanel6.Controls.OfType<Button>())
+                {
+                    button.Enabled = false;
+                }
+                rcons = await Rcons.InitRcon(textBox3.Text, textBox4.Text, maskedTextBox1.Text);
+                textBox1.Text += "Connection successful. \r\n";
+                
+                button2.Text = "Disconnect";
+                button2.Enabled = true;
+                button2.Click -= connect;
+                button2.Click += while_disconnected;
+            }
+            catch (Exception ex)
+            {
+
+                textBox1.Text += ex.Message + "\r\n";
+
+            }
 
 
+
+        }
+        private void while_disconnected(object sender, EventArgs e)
+        {
+            foreach (TextBox textbox in tableLayoutPanel6.Controls.OfType<TextBox>())
+            {
+                textbox.Enabled = true;
+            }
+            foreach (MaskedTextBox masked in tableLayoutPanel6.Controls.OfType<MaskedTextBox>())
+            {
+                masked.Enabled = true;
+            }
+            foreach (Button button in tableLayoutPanel6.Controls.OfType<Button>())
+            {
+                button.Enabled = true;
+            }
+
+            tableLayoutPanel6.Enabled = true;
+            button2.Text = "Connect";
+            button2.Click -= while_disconnected;
+            button2.Click += connect;
+            GC.Collect();
+        }
+
+        private async void send_command(object sender, EventArgs e)
+        {
+            try
+            {
+                string output = await Rcons.io(textBox2.Text) + "\r\n";
+            textBox1.Text += output;
+        }catch(NullReferenceException ex)
+            {
+                textBox1.Text += ex.Message + "\r\n";
+            }
+}
+        private async void send_command()
+        {
+            try {
+                string output = await Rcons.io(textBox2.Text) + "\r\n";
+                textBox1.Text += output;
+            }catch(NullReferenceException ex)
+            {
+                textBox1.Text += "Please connect to the host first. \r\n";
+            }
+
+            
         }
     }
 }
