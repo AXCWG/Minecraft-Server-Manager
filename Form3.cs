@@ -116,8 +116,13 @@ namespace WinFormsApp1
 
         private async void refresh_click_action(object sender, EventArgs e)
         {
+            textBox1.AppendText("Refreshing\r\n");
+
             BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += Backgroundworker_work;
+            backgroundWorker.DoWork += (object sender, DoWorkEventArgs e) =>
+            {
+                Backgroundworker_work(sender,e);
+            };
             backgroundWorker.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
             {
                 listBox1.Items.Clear();
@@ -131,7 +136,9 @@ namespace WinFormsApp1
                     }
 
                 }
+                textBox1.AppendText("Done refreshing. \r\n");
             };
+            backgroundWorker.RunWorkerAsync();
             GC.Collect();
 
 
