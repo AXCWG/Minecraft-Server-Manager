@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Security.Authentication;
 using System.Text;
@@ -14,6 +15,8 @@ namespace WinFormsApp1
 {
     public partial class Form3 : Form
     {
+        public bool icon_initialized { get; set; }
+
         string request_url;
         public Form3(string requested_url)
         {
@@ -25,6 +28,7 @@ namespace WinFormsApp1
             var result = await custom.API(request_url);
             e.Result = result;
         }
+        byte[] icon_img; 
         private void Backgroundworker_done(object sender, RunWorkerCompletedEventArgs e)
         {
             listBox1.Items.Clear();
@@ -50,13 +54,16 @@ namespace WinFormsApp1
             version.Text += result.version;
 
 
+            if(result.icon != null)
+            {
+                icon_initialized = true;
 
-
+            }
             string icon = result.icon;
             icon = icon.Substring(icon.IndexOf(",") + 1);
 
 
-            var icon_img = Convert.FromBase64String(icon);
+           icon_img = Convert.FromBase64String(icon);
 
             using (MemoryStream ms = new MemoryStream(icon_img))
             {
@@ -75,10 +82,45 @@ namespace WinFormsApp1
 
 
             }
+            
+            if(icon_initialized == true)
+            {
+
+                System.Windows.Forms.ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
+                contextMenuStrip.Items.Add("Save image...", null, save_image);
+                pictureBox1.ContextMenuStrip = contextMenuStrip;
+                
+
+            }
             textBox1.AppendText( "Completed." + "\r\n");
+        }
+        private void save_image(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Application.StartupPath;
+            saveFileDialog.Filter = "PNG Images (*.png) | *.png";
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string path = saveFileDialog.FileName;
+                try
+                {
+                    File.WriteAllBytes(path, icon_img);
+
+                }catch (Exception ex)
+                {
+                    MessageBox.Show("Failed: " + ex.Message, null, MessageBoxButtons.OK);
+                }
+                
+
+            }
+
+
+
         }
         private async void OnLoad(object sender, EventArgs e)
         {
+
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += Backgroundworker_work;
             backgroundWorker.RunWorkerCompleted += Backgroundworker_done;
