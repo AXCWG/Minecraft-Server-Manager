@@ -137,15 +137,8 @@ public static class Program
         //    }
         //};
 
-        if (!File.Exists("json.json"))
-        {
-            string fallbackstring = "{\"Instance\":[{\"id\": 0,\"Host\": \"andyxie.cn\" }]}";
-            File.WriteAllText("json.json", fallbackstring);
-
-        }
-        var json = File.ReadAllText("json.json");
-        config = JsonConvert.DeserializeObject<Config>(json);
-
+        
+        Load_Reload();
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
@@ -154,13 +147,20 @@ public static class Program
 
 
     }
-    public static void Save()
+    public static void Load_Reload()
     {
-        config.Instance.Add(new Instance
+        if (!File.Exists("json.json"))
         {
-            id = config.Instance.Count() + 1,
-            Host = "play.earthmc.net"
-        });
+            string fallbackstring = "{\"Instance\":[{\"id\": 0,\"Host\": \"andyxie.cn\" }]}";
+            File.WriteAllText("json.json", fallbackstring);
+
+        }
+        var json = File.ReadAllText("json.json");
+        config = JsonConvert.DeserializeObject<Config>(json);
+    }
+    public static void Save(Instance instance)
+    {
+        config.Instance.Add(instance);
         File.WriteAllText("json.json", JsonConvert.SerializeObject(config));
     }
 

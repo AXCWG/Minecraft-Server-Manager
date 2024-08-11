@@ -36,7 +36,6 @@ partial class Form1
         fIleToolStripMenuItem = new ToolStripMenuItem();
         newInstanceToolStripMenuItem = new ToolStripMenuItem();
         readFromFileToolStripMenuItem = new ToolStripMenuItem();
-        settingsToolStripMenuItem = new ToolStripMenuItem();
         helpToolStripMenuItem = new ToolStripMenuItem();
         aboutThisSoftwareToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator1 = new ToolStripSeparator();
@@ -47,7 +46,7 @@ partial class Form1
         // 
         // menuStrip1
         // 
-        menuStrip1.Items.AddRange(new ToolStripItem[] { fIleToolStripMenuItem, settingsToolStripMenuItem, helpToolStripMenuItem });
+        menuStrip1.Items.AddRange(new ToolStripItem[] { fIleToolStripMenuItem, helpToolStripMenuItem });
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
         menuStrip1.Size = new Size(800, 24);
@@ -66,18 +65,14 @@ partial class Form1
         newInstanceToolStripMenuItem.Name = "newInstanceToolStripMenuItem";
         newInstanceToolStripMenuItem.Size = new Size(180, 22);
         newInstanceToolStripMenuItem.Text = "New Instance";
+        newInstanceToolStripMenuItem.Click += newInstanceToolStripMenuItem_Click;
         // 
         // readFromFileToolStripMenuItem
         // 
         readFromFileToolStripMenuItem.Name = "readFromFileToolStripMenuItem";
         readFromFileToolStripMenuItem.Size = new Size(180, 22);
         readFromFileToolStripMenuItem.Text = "&Read From File";
-        // 
-        // settingsToolStripMenuItem
-        // 
-        settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-        settingsToolStripMenuItem.Size = new Size(61, 20);
-        settingsToolStripMenuItem.Text = "Settings";
+        readFromFileToolStripMenuItem.Click += readFromFileToolStripMenuItem_Click;
         // 
         // helpToolStripMenuItem
         // 
@@ -89,19 +84,19 @@ partial class Form1
         // aboutThisSoftwareToolStripMenuItem
         // 
         aboutThisSoftwareToolStripMenuItem.Name = "aboutThisSoftwareToolStripMenuItem";
-        aboutThisSoftwareToolStripMenuItem.Size = new Size(178, 22);
+        aboutThisSoftwareToolStripMenuItem.Size = new Size(180, 22);
         aboutThisSoftwareToolStripMenuItem.Text = "About this program";
         aboutThisSoftwareToolStripMenuItem.Click += aboutThisSoftwareToolStripMenuItem_Click;
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(175, 6);
+        toolStripSeparator1.Size = new Size(177, 6);
         // 
         // exitToolStripMenuItem
         // 
         exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-        exitToolStripMenuItem.Size = new Size(178, 22);
+        exitToolStripMenuItem.Size = new Size(180, 22);
         exitToolStripMenuItem.Text = "Exit";
         exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
         // 
@@ -144,7 +139,6 @@ partial class Form1
     private ToolStripMenuItem aboutThisSoftwareToolStripMenuItem;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem exitToolStripMenuItem;
-    private ToolStripMenuItem settingsToolStripMenuItem;
     private ToolStripMenuItem readFromFileToolStripMenuItem;
-    private TabControl tabControl1;
+    public static TabControl tabControl1;
 }
